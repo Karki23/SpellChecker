@@ -5,5 +5,5 @@ The output file generated (output.txt) will give you the line by line errors in 
 Work in progress:
   - Auto-suggesting words with the corrections in ouput.txt. (can be executed by seeing which permutation of the wrong word might be in
     the dictionary. [Not all permutations to be computed] )
-  - Making an UI (web application) for the same.
+
   
