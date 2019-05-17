@@ -38,9 +38,6 @@ int isLeafNode(struct TrieNode* root)
 
 void display(struct TrieNode* root, char str[], int level) 
 { 
-    // If node is leaf node, it indiicates end 
-    // of string, so a null charcter is added 
-    // and string is displayed 
     if (isLeafNode(root))  
     { 
         str[level] = '\0'; 
@@ -49,11 +46,7 @@ void display(struct TrieNode* root, char str[], int level)
   
     int i; 
     for (i = 0; i < 26; i++)  
-    { 
-        // if NON NULL child is found 
-        // add parent key to str and 
-        // call the display function recursively 
-        // for child node 
+    {
         if (root->children[i])  
         { 
             str[level] = i + 'a'; 
@@ -80,6 +73,49 @@ struct TrieNode *getNode(void)
   
     return pNode; 
 } 
+
+char* check_permuatations(char* string,struct TrieNode *root){
+	char* temp_string;
+	char temp;
+	int str_len = strlen(string);
+	for(int i=0;i<str_len;i++){
+		temp_string = string;
+		if(i==0){
+			temp = temp_string[i];
+			temp_string[i] = temp_string[i+1];
+			temp_string[i+1] = temp;
+			if(search(root,temp_string)){
+				return temp_string;
+			}
+		}
+		else if(i==(str_len-1)){
+			temp = temp_string[i];
+			temp_string[i] = temp_string[i-1];
+			temp_string[i-1] = temp;
+			if(search(root,temp_string)){
+				return temp_string;
+			}
+		}
+		else{
+			temp = temp_string[i];
+			temp_string[i] = temp_string[i-1];
+			temp_string[i-1] = temp;
+			if(search(root,temp_string)){
+				return temp_string;
+			}
+
+			temp_string = string;
+
+			temp = temp_string[i];
+			temp_string[i] = temp_string[i+1];
+			temp_string[i+1] = temp;
+			if(search(root,temp_string)){
+				return temp_string;
+			}
+		}
+	}
+	return "";
+}
 
 void frw(char* filename, int flag, struct TrieNode *root)
 {
@@ -124,6 +160,7 @@ void frw(char* filename, int flag, struct TrieNode *root)
 	{
 		FILE *fp = fopen(filename,"r");
 		FILE *fpw = fopen("output.txt","w");
+		char* perm;
 		if(fp == NULL)
 		{
 			printf("Input file Could Not Open");
@@ -151,6 +188,11 @@ void frw(char* filename, int flag, struct TrieNode *root)
 				present = search(root, string_to_search);
 				if(!present){
 					fputs(string_to_search, fpw);
+					//call for permutation function here
+					fputc('(',fpw);
+					perm = check_permuatations(string_to_search,root);
+					fputs(perm,fpw);
+					fputc(')',fpw);
 					fputc(' ',fpw);
 				}
 				count = 0;
@@ -166,6 +208,10 @@ void frw(char* filename, int flag, struct TrieNode *root)
 		present = search(root, string_to_search);
 		if(!present){
 			fputs(string_to_search, fpw);
+			fputc('(',fpw);
+			perm = check_permuatations(string_to_search,root);
+			fputs(perm,fpw);
+			fputc(')',fpw);
 			fputs("\n",fpw);
 		}
 		fclose(fpw);
