@@ -3,77 +3,82 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include "header.h"
-
+// This function calculates the index of the trie tree where a particular node must be inserted
 int CHAR_TO_INDEX(char c){
 	return ((int)c - (int)'a');
 }
 
-int search(struct TrieNode *root, const char *key) 
-{ 
-    int level; 
-    int length = strlen(key); 
-    int index; 
-    struct TrieNode *pCrawl = root; 
-  
-    for (level = 0; level < length; level++) 
-    { 
-        index = CHAR_TO_INDEX(key[level]); 
-  
-        if (!pCrawl->children[index]) 
-            return 0; 
-  
-        pCrawl = pCrawl->children[index]; 
-    } 
-  
-    return (pCrawl != NULL && pCrawl->isEndOfWord); 
-} 
+//Seaches for a string key in the trie tree with root as *root
+int search(struct TrieNode *root, const char *key)
+{
+    int level;
+    int length = strlen(key);
+    int index;
+    struct TrieNode *pCrawl = root;
 
-int isLeafNode(struct TrieNode* root) 
-{ 
+    for (level = 0; level < length; level++)
+    {
+        index = CHAR_TO_INDEX(key[level]);
+
+        if (!pCrawl->children[index])
+            return 0;
+
+        pCrawl = pCrawl->children[index];
+    }
+
+    return (pCrawl != NULL && pCrawl->isEndOfWord);
+}
+
+//Checks if a particular node is the leaf node by checking for the isEndOfWord bit
+int isLeafNode(struct TrieNode* root)
+{
     if(root->isEndOfWord){
     	return 1;
-    } 
+    }
     return 0;
 }
 
-void display(struct TrieNode* root, char str[], int level) 
-{ 
-    if (isLeafNode(root))  
-    { 
-        str[level] = '\0'; 
-        printf("%s\n",str); 
-    } 
-  
-    int i; 
-    for (i = 0; i < 26; i++)  
+//A recursive function to display the contents of the trie
+void display(struct TrieNode* root, char str[], int level)
+{
+    if (isLeafNode(root))
     {
-        if (root->children[i])  
-        { 
-            str[level] = i + 'a'; 
-            display(root->children[i], str, level + 1); 
-        } 
-    } 
-} 
-// Returns new trie node (initialized to NULLs) 
-struct TrieNode *getNode(void) 
-{ 
-    struct TrieNode *pNode = NULL; 
-  
-    pNode = (struct TrieNode *)malloc(sizeof(struct TrieNode)); 
-  
-    if (pNode) 
-    { 
-        int i; 
-  
-        pNode->isEndOfWord = 0; 
-  
-        for (i = 0; i < ALPHABET_SIZE; i++) 
-            pNode->children[i] = NULL; 
-    } 
-  
-    return pNode; 
-} 
+        str[level] = '\0';
+        printf("%s\n",str);
+    }
 
+    int i;
+    for (i = 0; i < 26; i++)
+    {
+        if (root->children[i])
+        {
+            str[level] = i + 'a';
+            display(root->children[i], str, level + 1);
+        }
+    }
+}
+// Returns new trie node (initialized to NULLs)
+struct TrieNode *getNode(void)
+{
+    struct TrieNode *pNode = NULL;
+
+    pNode = (struct TrieNode *)malloc(sizeof(struct TrieNode));
+
+    if (pNode)
+    {
+        int i;
+
+        pNode->isEndOfWord = 0;
+
+        for (i = 0; i < ALPHABET_SIZE; i++)
+            pNode->children[i] = NULL;
+    }
+
+    return pNode;
+}
+
+
+//Checks wether a given permutation of the given string is there in the trie or not, if there return teh permutation else return ""
 char* check_permuatations(char* string,struct TrieNode *root){
 	char* temp_string;
 	char temp;
@@ -122,7 +127,7 @@ void frw(char* filename, int flag, struct TrieNode *root)
 
 	if(flag == 0)
 	{
-		
+
 		FILE * fp = fopen(filename, "r");
 		if (fp == NULL) return ;
 		char c;
@@ -216,10 +221,6 @@ void frw(char* filename, int flag, struct TrieNode *root)
 		}
 		fclose(fpw);
 		fclose(fp);
-		return;	
+		return;
 	}
 }
-  
-
-
-
